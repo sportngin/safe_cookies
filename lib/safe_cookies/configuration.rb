@@ -13,16 +13,15 @@ module SafeCookies
   end
 
   class Configuration
-    attr_accessor :log_unknown_cookies
+    attr_accessor :log_unknown_cookies, :all_scriptable
     attr_reader :registered_cookies, :fix_cookie_paths, :correct_cookie_paths_timestamp,
-      :ignored_cookies, :all_scriptable
+      :ignored_cookies
 
     def initialize
       self.registered_cookies = {}
       self.insecure_cookies = []
       self.scriptable_cookies = []
       self.ignored_cookies = []
-      self.all_scriptable = false
     end
 
     # Register cookies you expect to receive. The middleware will rewrite all
