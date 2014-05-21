@@ -1,8 +1,8 @@
 module SafeCookies
   module Helpers
-  
+
     KNOWN_COOKIES_DIVIDER = '|'
-  
+
     # Since we have to operate on and modify the actual @headers hash that the
     # application returns, cache the @headers['Set-Cookie'] string so that
     # later on, we still know what the application did set.
@@ -10,13 +10,13 @@ module SafeCookies
       cookies = @headers['Set-Cookie']
       # Rack 1.1 returns an Array
       cookies = cookies.join("\n") if cookies.is_a?(Array)
-    
+
       if cookies and cookies.length > 0
         @application_cookies_string = cookies
       end
       # else, @application_cookies_string will be `nil`
     end
-  
+
     def secure(cookie)
       # Regexp from https://github.com/tobmatth/rack-ssl-enforcer/
       if should_be_secure?(cookie) and cookie !~ /(^|;\s)secure($|;)/
@@ -47,10 +47,10 @@ module SafeCookies
       # Rack magic
       Rack::Utils.set_cookie_header!(@headers, name, options)
     end
-  
-  
+
+
     # getters
-    
+
     # returns the request cookies minus ignored cookies
     def request_cookies
       Util.except!(@request.cookies.dup, *@config.ignored_cookies)
@@ -94,8 +94,8 @@ module SafeCookies
 
     def should_be_http_only?(cookie)
       cookie_name = cookie.split('=').first.strip
-      not @config.scriptable_cookie?(cookie_name)
-    end  
+      not @config.all_scriptable? and not @config.scriptable_cookie?(cookie_name)
+    end
 
   end
 end

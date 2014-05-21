@@ -1,5 +1,5 @@
 module SafeCookies
-  
+
   MissingOptionError = Class.new(StandardError)
 
   class << self
@@ -15,15 +15,16 @@ module SafeCookies
   class Configuration
     attr_accessor :log_unknown_cookies
     attr_reader :registered_cookies, :fix_cookie_paths, :correct_cookie_paths_timestamp,
-      :ignored_cookies
+      :ignored_cookies, :all_scriptable
 
     def initialize
       self.registered_cookies = {}
       self.insecure_cookies = []
       self.scriptable_cookies = []
       self.ignored_cookies = []
+      self.all_scriptable = false
     end
-    
+
     # Register cookies you expect to receive. The middleware will rewrite all
     # registered cookies it receives, making them both secure and http_only.
     #
@@ -42,12 +43,12 @@ module SafeCookies
       name.is_a?(String) or raise "Cookie name must be a String"
       options.has_key?(:expire_after) or raise MissingOptionError.new("Cookie #{name.inspect} was registered without an expiry")
       raise NotImplementedError if options.has_key?(:domain)
-      
+
       registered_cookies[name] = (options || {}).freeze
       insecure_cookies << name if options[:secure] == false
       scriptable_cookies << name if options[:http_only] == false
     end
-    
+
     # Ignore cookies that you don't control like this:
     #
     #   ignore_cookie 'ignored_cookie'
@@ -55,24 +56,24 @@ module SafeCookies
     def ignore_cookie(name_or_regex)
       self.ignored_cookies << name_or_regex
     end
-    
+
     def fix_paths(options = {})
       options.has_key?(:for_cookies_secured_before) or raise MissingOptionError.new("Was told to fix paths without the :for_cookies_secured_before timestamp.")
 
       self.fix_cookie_paths = true
       self.correct_cookie_paths_timestamp = options[:for_cookies_secured_before]
     end
-    
+
     def insecure_cookie?(name)
       insecure_cookies.include? name
     end
-    
+
     def scriptable_cookie?(name)
       scriptable_cookies.include? name
     end
-    
+
     private
-    
+
     attr_accessor :insecure_cookies, :scriptable_cookies
     attr_writer :registered_cookies, :fix_cookie_paths, :correct_cookie_paths_timestamp,
       :ignored_cookies
