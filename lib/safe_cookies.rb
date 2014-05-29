@@ -41,7 +41,7 @@ module SafeCookies
 
       # call the next middleware up the stack
       status, @headers, body = @app.call(env)
-      # cache_application_cookies_string
+      cache_application_cookies_string
 
       enhance_application_cookies!
       # store_application_cookie_names
