@@ -37,16 +37,16 @@ module SafeCookies
       reset_instance_variables
 
       @request = Rack::Request.new(env)
-      check_if_request_has_unknown_cookies
+      # check_if_request_has_unknown_cookies
 
       # call the next middleware up the stack
       status, @headers, body = @app.call(env)
-      cache_application_cookies_string
+      # cache_application_cookies_string
 
       enhance_application_cookies!
-      store_application_cookie_names
+      # store_application_cookie_names
 
-      delete_cookies_on_bad_path if fix_cookie_paths?
+      # delete_cookies_on_bad_path if fix_cookie_paths?
       # rewrite_request_cookies unless cookies_have_been_rewritten_before?
 
       [ status, @headers, body ]
