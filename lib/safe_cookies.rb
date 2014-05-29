@@ -47,7 +47,7 @@ module SafeCookies
       store_application_cookie_names
 
       delete_cookies_on_bad_path if fix_cookie_paths?
-      rewrite_request_cookies unless cookies_have_been_rewritten_before?
+      # rewrite_request_cookies unless cookies_have_been_rewritten_before?
 
       [ status, @headers, body ]
     end

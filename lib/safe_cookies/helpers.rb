@@ -94,7 +94,7 @@ module SafeCookies
 
     def should_be_http_only?(cookie)
       cookie_name = cookie.split('=').first.strip
-      not @config.all_scriptable and not @config.scriptable_cookie?(cookie_name)
+      !(@config.all_scriptable or @config.scriptable_cookie?(cookie_name))
     end
 
   end
